@@ -62,6 +62,8 @@ func (c *Client) ReadDiscreteIOStatus(addr int) ([2]byte, error) {
 		return [2]byte{}, err
 	}
 
+	fmt.Println("Read I/O responce:", string(res))
+
 	return [2]byte{byte(firstData), byte(secondData)}, nil
 }
 

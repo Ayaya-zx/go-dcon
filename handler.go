@@ -7,25 +7,6 @@ import (
 	"go.bug.st/serial"
 )
 
-type (
-	Parity   int
-	StopBits int
-)
-
-const (
-	NoParity Parity = iota
-	OddParity
-	EvenParity
-	MarkParity
-	SpaceParity
-)
-
-const (
-	OneStopBit StopBits = iota
-	OnePointFiveStopBits
-	TwoStopBits
-)
-
 type NotConnectedError string
 
 func (e NotConnectedError) Error() string {
@@ -36,24 +17,23 @@ func notConnectedError() error {
 	return NotConnectedError("handler not connected")
 }
 
+// Handler provides low-level communication functionality.
 type Handler struct {
-	BaudRate int
-	DataBits int
-	Parity   Parity
-	StopBits StopBits
-	port     serial.Port
+	port serial.Port
 }
 
 func NewHandler() *Handler {
 	return &Handler{}
 }
 
-func (h *Handler) Connect(portName string) error {
+func (h *Handler) Connect(portName string, baudRate int) error {
 	mode := &serial.Mode{
-		BaudRate: h.BaudRate,
-		DataBits: h.DataBits,
-		Parity:   serial.Parity(h.Parity),
-		StopBits: serial.StopBits(h.StopBits),
+		BaudRate: baudRate,
+		// Other values are fixed for both
+		// the I-7000 and M-7000 series.
+		DataBits: 8,
+		Parity:   serial.NoParity,
+		StopBits: serial.OneStopBit,
 	}
 
 	port, err := serial.Open(portName, mode)

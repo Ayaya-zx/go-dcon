@@ -22,19 +22,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client := dcon.NewClient(handler)
-	name, err := client.ReadName(2)
-	if err != nil {
-		log.Fatal(err)
-	}
+	devs := dcon.Scan(handler)
 
-	fmt.Println(name)
-
-	state, err := client.ReadDiscreteIOStatus(2)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("First data bit: %08b\n", state[0])
-	fmt.Printf("Second data bit: %08b\n", state[1])
+	fmt.Printf("Found devices: %v\n", devs)
 }
